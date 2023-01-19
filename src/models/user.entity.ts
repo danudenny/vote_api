@@ -1,6 +1,6 @@
 import { Column, Entity } from 'typeorm';
 import { BaseEntity } from './base.entity';
-import { Gender } from './enum';
+import { AuthType, Gender } from './enum';
 
 @Entity({
   name: 'users',
@@ -71,4 +71,12 @@ export class UserEntity extends BaseEntity {
     default: false,
   })
   isVerified: Boolean;
+
+  @Column({
+    type: 'enum',
+    name: 'auth_type',
+    enum: AuthType,
+    default: AuthType.email
+  })
+  authType: AuthType;
 }

@@ -52,11 +52,11 @@ export class AuthController {
 
   @Get('google')
   @UseGuards(GoogleGuard)
-  async googleAuth(@Request() req) {}
+  async googleSignupAuth(@Request() req) {}
 
   @Get('google/redirect')
   @UseGuards(GoogleGuard)
-  googleAuthRedirect(@Request() req) {    
+  googleLoginAuthRedirect(@Request() req) {    
     return this.authSvc.googleLogin(req)
   }
 }
