@@ -74,7 +74,19 @@ export class AuthService {
 
   async login(payload: LoginDto): Promise<any> {
     await this.checkEmail(payload.email.toString());
-    const getUser = await this.userRepo.findOne({ email: payload.email });
+    const getUser = await this.userRepo.findOne({ 
+      where : {
+        email: payload.email
+      }
+    });
+
+    if (getUser.authType !== AuthType.email) {
+      throw new BadRequestException("Login Failed. Try login using Social Media instead!")
+    }
+
+    if (!getUser.isVerified) {
+      throw new BadRequestException("Your account did not verified. Verified through email first!")
+    }
 
     await this.comparePassword(
       payload.password.toString(),
