@@ -106,4 +106,46 @@ export class AuthService {
     }
     return null;
   }
+
+  // oauth
+  async googleLogin(req: any) {
+    // find user
+    if(!req.user) {
+      throw new NotFoundException("No User from google");
+    }
+
+    const getUser = await this.userRepo.findOne({email: req.user.email})
+    if (getUser) {
+      throw new BadRequestException("User already registered with this email. Try login using email and password instead!");
+    } else {
+      const {name, email, picture} = req.user
+
+      const createUser = new UserEntity();
+      createUser.name = name;
+      createUser.nickname = this.generateNickName(name);
+      createUser.email = email;
+      createUser.dob = new Date();
+      createUser.password = await this.hashPassword(email.toString());
+      createUser.phone = '0';
+      createUser.avatar = picture;
+      createUser.isVerified = true;
+
+      try {
+        const saveUser = await this.userRepo.save(createUser);
+        if (saveUser) {
+          return {
+            message: 'Success Create User',
+            data: createUser,
+          };
+        }
+      } catch (error) {
+        console.log(error);
+        throw new InternalServerErrorException(error);
+      }
+    }
+  }
+
+  private generateNickName(name: string): any {
+    return name.split(" ").join("").toLowerCase();
+  }
 }

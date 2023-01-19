@@ -4,6 +4,8 @@ import {
   Post,
   Request,
   UseInterceptors,
+  Body,
+  UseGuards
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import {
@@ -13,11 +15,11 @@ import {
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
-import { Body, UseGuards } from '@nestjs/common/decorators';
 import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
 import { JwtGuard } from '../../guards/jwt.guard';
 import { ResponseInterceptor } from '../../interceptors/response.interceptor';
+import { GoogleGuard } from 'src/guards/google.guard';
 
 @ApiTags('Branch')
 @Controller('v1/auth')
@@ -46,5 +48,15 @@ export class AuthController {
   @UseInterceptors(ResponseInterceptor)
   profile(@Request() req) {
     return this.authSvc.profile(req.user.userId);
+  }
+
+  @Get('google')
+  @UseGuards(GoogleGuard)
+  async googleAuth(@Request() req) {}
+
+  @Get('google/redirect')
+  @UseGuards(GoogleGuard)
+  googleAuthRedirect(@Request() req) {    
+    return this.authSvc.googleLogin(req)
   }
 }
