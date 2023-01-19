@@ -1,20 +1,27 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsEmail } from 'class-validator';
+import { Gender } from '../../../models/enum';
 
 export class RegisterDto {
   @ApiProperty()
-  name: String;
+  name: string;
+
+  @ApiProperty()
+  nickname: string;
 
   @ApiProperty()
   dob: Date;
 
   @ApiProperty()
   @IsEmail()
-  email: String;
+  email: string;
 
   @ApiProperty()
-  password: String;
+  password: string;
 
   @ApiProperty()
-  phone: String;
+  phone: string;
+
+  @ApiProperty()
+  gender: Gender;
 }
