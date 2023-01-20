@@ -16,9 +16,7 @@ export class AuthTwitterService {
 
   async twitterLogin(req: any) {
     const {username, name, profile_image_url } = req.user
-    let subId = "";
-    console.log(req.user);
-    
+    let subId = "";    
 
     // find user
     if(!req.user) {
@@ -67,7 +65,7 @@ export class AuthTwitterService {
     }
 
     if (userData.authType !== AuthType.twitter) {
-      throw new BadRequestException("User already registered with social media. Try login using email and password instead!");
+      throw new BadRequestException("User already registered with this email. Try login using different email and password instead!");
     } 
 
     const jwtPayload = {

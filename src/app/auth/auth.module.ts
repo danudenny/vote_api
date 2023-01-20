@@ -12,16 +12,31 @@ import { TwitterStrategy } from 'src/strategies/twitter.strategy';
 import { AuthGoogleService } from './auth-google.service';
 import { AuthTwitterService } from './auth-twitter.service';
 import { LoaderEnv } from 'src/config/loader';
+import { AuthKakaoService } from './auth-kakao.service';
+import { KakaoStrategy } from 'src/strategies/kakao.strategy';
+import { HttpModule } from '@nestjs/axios';
+import { KakaoIdentityEntity } from 'src/models/kakao-identity.entity';
 @Module({
   imports: [
-    TypeOrmModule.forFeature([UserEntity]),
+    HttpModule.register({}),
+    TypeOrmModule.forFeature([UserEntity, KakaoIdentityEntity]),
     PassportModule,
     JwtModule.register({
       secret: LoaderEnv.envs.JWT_SECRET,
       signOptions: { expiresIn: '2h' },
     }),
   ],
-  providers: [AuthService, AuthGoogleService, AuthTwitterService, LocalStrategy, JwtStrategy, GoogleStrategy, TwitterStrategy],
+  providers: [
+    AuthService, 
+    AuthGoogleService,
+    AuthTwitterService,
+    AuthKakaoService,
+    LocalStrategy,
+    JwtStrategy,
+    GoogleStrategy,
+    TwitterStrategy,
+    KakaoStrategy
+  ],
   controllers: [AuthController],
 })
 export class AuthModule {}

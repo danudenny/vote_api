@@ -6,12 +6,14 @@ import {
   UseInterceptors,
   Body,
   UseGuards,
-  Header
+  Header,
+  Param
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import {
   ApiBody,
   ApiOkResponse,
+  ApiParam,
   ApiSecurity,
   ApiTags,
   ApiUnauthorizedResponse,
@@ -25,6 +27,8 @@ import { TwitterGuard } from 'src/guards/twitter.guard';
 import { AuthTwitterService } from './auth-twitter.service';
 import { AuthGoogleService } from './auth-google.service';
 import { LoaderEnv } from 'src/config/loader';
+import { KakaoGuard } from 'src/guards/kakao.guard';
+import { AuthKakaoService } from './auth-kakao.service';
 
 @ApiTags('Branch')
 @Controller('v1/auth')
@@ -32,7 +36,8 @@ export class AuthController {
   constructor(
     private authSvc: AuthService,
     private twitterSvc: AuthTwitterService,
-    private googleSvc: AuthGoogleService
+    private googleSvc: AuthGoogleService,
+    private kakaoSvc: AuthKakaoService
   ) {}
 
   @Post('register')
@@ -78,5 +83,22 @@ export class AuthController {
   @UseGuards(TwitterGuard)
   twitterAuthRedirect(@Request() req) {        
     return this.twitterSvc.twitterLogin(req)
+  }
+
+  @Get('kakao')
+  @UseGuards(KakaoGuard)
+  async kakaoAuth(@Request() req) {}
+
+  @Get('kakao/redirect')
+  @UseGuards(KakaoGuard)
+  kakaoAuthRedirect(@Request() req) {        
+    return this.kakaoSvc.kakaoLogin(req)
+  }
+
+  @Get('kakao/logout/:uid')
+  @UseGuards(KakaoGuard)
+  @ApiParam({name: 'uid'})
+  kakaoAuthLogout(@Param() uid: string) {        
+    return this.kakaoSvc.kakaoLogout(uid)
   }
 }
