@@ -6,12 +6,7 @@ import { LoaderEnv } from "src/config/loader";
 @Injectable()
 export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
     constructor() {
-        super({
-            clientID: LoaderEnv.envs.GOOGLE_CLIENT_ID,
-            clientSecret: LoaderEnv.envs.GOOGLE_SECRET_ID,
-            callbackURL: `${LoaderEnv.envs.APP_URL}/auth${LoaderEnv.envs.GOOGLE_CALLBACK_URL}`,
-            scope: ['email', 'profile']
-        })
+        super(LoaderEnv.googleStrategy())
     }
 
     async validate(

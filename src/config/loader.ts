@@ -4,6 +4,7 @@ import * as path from 'path';
 import { TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { PostgresConnectionOptions } from 'typeorm/driver/postgres/PostgresConnectionOptions';
 import { CustomNamingStrategy } from './CustomNamingStrategies';
+import { ExtractJwt } from 'passport-jwt';
 
 // Load `.env.defaults` then `.env` file.
 // `load()` only returning from these files!
@@ -44,6 +45,51 @@ export class LoaderEnv {
     return envs.DEBUG === true;
   }
 
+  public static bull() {
+    return {
+      redis: {
+        host: envs.REDIS_BULL_HOST,
+        port:  envs.REDIS_BULL_PORT,
+      }
+    }
+  }
+
+  public static googleStrategy() {
+    return {
+      clientID: envs.GOOGLE_CLIENT_ID,
+      clientSecret: envs.GOOGLE_SECRET_ID,
+      callbackURL: `${envs.APP_URL}/auth${envs.GOOGLE_CALLBACK_URL}`,
+      scope: ['email', 'profile']
+    }
+  }
+
+  public static twitterStrategy() {
+    return {
+      clientType: envs.TWITTER_CLIENT_TYPE,
+      clientID: envs.TWITTER_CLIENT_ID,
+      clientSecret: envs.TWITTER_CLIENT_SECRETT,
+      callbackURL: envs.TWITTER_CALLBACK_URL,
+      scope: ['tweet.read', 'users.read', 'offline.access']
+    }
+  }
+
+  public static kakaoStrategy() {
+    return {
+      clientID: envs.KAKAO_CLIENT_ID,
+      clientSecret: envs.KAKAO_SECRET_ID,
+      callbackURL: `${envs.APP_URL}/auth${envs.KAKAO_CALLBACK_URL}`,
+      scope: ['profile_nickname', 'profile_image', 'account_email']
+    }
+  }
+
+  public static jwtStrategy() {
+    return {
+      jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+      ignoreExpiration: false,
+      secretOrKey: envs.JWT_SECRET,
+    }
+  }
+
   public static getTypeOrmConfig(useReplication = false): TypeOrmModuleOptions {
     let config: PostgresConnectionOptions = {
       type: 'postgres',
@@ -52,15 +98,6 @@ export class LoaderEnv {
       migrations: [path.join(__dirname, '../', 'migrations/*.ts')],
       logging: LoaderEnv.isDebugMode(),
       namingStrategy: new CustomNamingStrategy(),
-      // cache: {
-      //   type: 'redis',
-      //   options: {
-      //     host: envs.REDIS_CACHE_HOST,
-      //     port: envs.REDIS_CACHE_PORT,
-      //     password: envs.REDIS_CACHE_PASSWORD,
-      //     db: envs.REDIS_CACHE_DB,
-      //   },
-      // },
     };
 
     const ssl = LoaderEnv.envs.POSTGRES_USE_SSL || false;
