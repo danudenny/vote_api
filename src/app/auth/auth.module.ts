@@ -8,17 +8,20 @@ import { JwtStrategy } from '../../strategies/jwt.strategy';
 import { JwtModule } from '@nestjs/jwt';
 import { LocalStrategy } from '../../strategies/local.strategy';
 import { GoogleStrategy } from 'src/strategies/google.strategy';
-
+import { TwitterStrategy } from 'src/strategies/twitter.strategy';
+import { AuthGoogleService } from './auth-google.service';
+import { AuthTwitterService } from './auth-twitter.service';
+import { LoaderEnv } from 'src/config/loader';
 @Module({
   imports: [
     TypeOrmModule.forFeature([UserEntity]),
     PassportModule,
     JwtModule.register({
-      secret: 'thisissecret',
+      secret: LoaderEnv.envs.JWT_SECRET,
       signOptions: { expiresIn: '2h' },
     }),
   ],
-  providers: [AuthService, LocalStrategy, JwtStrategy, GoogleStrategy],
+  providers: [AuthService, AuthGoogleService, AuthTwitterService, LocalStrategy, JwtStrategy, GoogleStrategy, TwitterStrategy],
   controllers: [AuthController],
 })
 export class AuthModule {}

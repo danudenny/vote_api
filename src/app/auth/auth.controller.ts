@@ -5,7 +5,8 @@ import {
   Request,
   UseInterceptors,
   Body,
-  UseGuards
+  UseGuards,
+  Header
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import {
@@ -20,11 +21,19 @@ import { LoginDto } from './dto/login.dto';
 import { JwtGuard } from '../../guards/jwt.guard';
 import { ResponseInterceptor } from '../../interceptors/response.interceptor';
 import { GoogleGuard } from 'src/guards/google.guard';
+import { TwitterGuard } from 'src/guards/twitter.guard';
+import { AuthTwitterService } from './auth-twitter.service';
+import { AuthGoogleService } from './auth-google.service';
+import { LoaderEnv } from 'src/config/loader';
 
 @ApiTags('Branch')
 @Controller('v1/auth')
 export class AuthController {
-  constructor(private authSvc: AuthService) {}
+  constructor(
+    private authSvc: AuthService,
+    private twitterSvc: AuthTwitterService,
+    private googleSvc: AuthGoogleService
+  ) {}
 
   @Post('register')
   @ApiBody({ type: RegisterDto })
@@ -52,11 +61,22 @@ export class AuthController {
 
   @Get('google')
   @UseGuards(GoogleGuard)
-  async googleSignupAuth(@Request() req) {}
+  async googleAuth(@Request() req) {}
 
   @Get('google/redirect')
   @UseGuards(GoogleGuard)
-  googleLoginAuthRedirect(@Request() req) {    
-    return this.authSvc.googleLogin(req)
+  googleAuthRedirect(@Request() req) {    
+    return this.googleSvc.googleLogin(req)
+  }
+
+  @Get('twitter')
+  @UseGuards(TwitterGuard)
+  async twitterAuth(@Request() req) {}
+
+  @Get('twitter/redirect')
+  @Header('Authorization', `Bearer ${LoaderEnv.envs.TWITTER_BEARER_TOKEN}`)
+  @UseGuards(TwitterGuard)
+  twitterAuthRedirect(@Request() req) {        
+    return this.twitterSvc.twitterLogin(req)
   }
 }

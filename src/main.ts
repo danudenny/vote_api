@@ -5,11 +5,20 @@ import { LoaderEnv } from './config/loader';
 import { ValidationPipe } from './pipes/validation.pipe';
 import { DocumentBuilder } from '@nestjs/swagger';
 import { SwaggerModule } from '@nestjs/swagger/dist';
+import * as session from 'express-session';
+
 const logger = new PinoLogger({});
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, { logger: console });
   app.useLogger(app.get(Logger));
+  app.use(
+    session({
+      secret: 'my-secret',
+      resave: false,
+      saveUninitialized: false,
+    }),
+  );
 
   if (LoaderEnv.envs.CORS) {
     app.enableCors();
