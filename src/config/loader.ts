@@ -5,6 +5,7 @@ import { TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { PostgresConnectionOptions } from 'typeorm/driver/postgres/PostgresConnectionOptions';
 import { CustomNamingStrategy } from './CustomNamingStrategies';
 import { ExtractJwt } from 'passport-jwt';
+import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
 
 // Load `.env.defaults` then `.env` file.
 // `load()` only returning from these files!
@@ -87,6 +88,30 @@ export class LoaderEnv {
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       ignoreExpiration: false,
       secretOrKey: envs.JWT_SECRET,
+    }
+  }
+
+  public static mailCred() {    
+    return {
+      transport: {
+        host: envs.MAIL_HOST,
+        secure: envs.MAIL_SSL,
+        port: envs.MAIL_PORT,
+        auth: {
+          user: envs.MAIL_USER,
+          pass: envs.MAIL_PASS,
+        },
+      },
+      defaults: {
+        from: `"No Reply" <${envs.MAIL_FROM}>`,
+      },
+      template: {
+        dir: path.join(__dirname, '../', 'mail/templates'),
+        adapter: new HandlebarsAdapter(),
+        options: {
+          strict: true,
+        },
+      },
     }
   }
 
