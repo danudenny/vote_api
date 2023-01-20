@@ -6,14 +6,12 @@ import {
   UseInterceptors,
   Body,
   UseGuards,
-  Header,
-  Param
+  Header
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import {
   ApiBody,
   ApiOkResponse,
-  ApiParam,
   ApiSecurity,
   ApiTags,
   ApiUnauthorizedResponse,
@@ -93,12 +91,5 @@ export class AuthController {
   @UseGuards(KakaoGuard)
   kakaoAuthRedirect(@Request() req) {        
     return this.kakaoSvc.kakaoLogin(req)
-  }
-
-  @Get('kakao/logout/:uid')
-  @UseGuards(KakaoGuard)
-  @ApiParam({name: 'uid'})
-  kakaoAuthLogout(@Param() uid: string) {        
-    return this.kakaoSvc.kakaoLogout(uid)
   }
 }

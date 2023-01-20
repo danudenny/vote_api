@@ -14,12 +14,9 @@ import { AuthTwitterService } from './auth-twitter.service';
 import { LoaderEnv } from 'src/config/loader';
 import { AuthKakaoService } from './auth-kakao.service';
 import { KakaoStrategy } from 'src/strategies/kakao.strategy';
-import { HttpModule } from '@nestjs/axios';
-import { KakaoIdentityEntity } from 'src/models/kakao-identity.entity';
 @Module({
   imports: [
-    HttpModule.register({}),
-    TypeOrmModule.forFeature([UserEntity, KakaoIdentityEntity]),
+    TypeOrmModule.forFeature([UserEntity]),
     PassportModule,
     JwtModule.register({
       secret: LoaderEnv.envs.JWT_SECRET,
