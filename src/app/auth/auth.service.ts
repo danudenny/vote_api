@@ -1,7 +1,7 @@
 import {
   BadRequestException,
   Injectable,
-  InternalServerErrorException
+  InternalServerErrorException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserEntity } from 'src/models/user.entity';
@@ -21,10 +21,9 @@ export class AuthService {
     @InjectRepository(UserEntity)
     private readonly userRepo: Repository<UserEntity>,
     private jwtService: JwtService,
-    private mailSvc: MailService
+    private mailSvc: MailService,
   ) {}
 
-  
   private generateTokenJwt(sub: string, email: string) {
     const jwtPayload = {
       sub,
@@ -49,9 +48,16 @@ export class AuthService {
     try {
       const saveUser = await this.userRepo.save(createUser);
       if (saveUser) {
-        const token = this.generateTokenJwt(saveUser.id, saveUser.email.toString())
-        const url = `${LoaderEnv.envs.APP_URL}/auth/confirm?token=${token}`
-        await this.mailSvc.sendConfirmationEmail(saveUser.name.toString(), saveUser.email.toString(), url)
+        const token = this.generateTokenJwt(
+          saveUser.id,
+          saveUser.email.toString(),
+        );
+        const url = `${LoaderEnv.envs.APP_URL}/auth/confirm?token=${token}`;
+        await this.mailSvc.sendConfirmationEmail(
+          saveUser.name.toString(),
+          saveUser.email.toString(),
+          url,
+        );
 
         return {
           message: 'Success Create User',
@@ -66,18 +72,22 @@ export class AuthService {
 
   async login(payload: LoginDto): Promise<any> {
     await checkEmail(payload.email.toString());
-    const getUser = await this.userRepo.findOne({ 
-      where : {
-        email: payload.email
-      }
+    const getUser = await this.userRepo.findOne({
+      where: {
+        email: payload.email,
+      },
     });
 
     if (getUser.authType !== AuthType.email) {
-      throw new BadRequestException("Login Failed. Try login using Social Media instead!")
+      throw new BadRequestException(
+        'Login Failed. Try login using Social Media instead!',
+      );
     }
 
     if (!getUser.isVerified) {
-      throw new BadRequestException("Your account did not verified. Verified through email first!")
+      throw new BadRequestException(
+        'Your account did not verified. Verified through email first!',
+      );
     }
 
     await comparePassword(
@@ -111,5 +121,4 @@ export class AuthService {
     }
     return null;
   }
-  
 }

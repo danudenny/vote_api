@@ -16,6 +16,7 @@ import { AuthKakaoService } from './auth-kakao.service';
 import { KakaoStrategy } from 'src/strategies/kakao.strategy';
 import { MailService } from '../mail/mail.service';
 import { BullModule } from '@nestjs/bull';
+
 @Module({
   imports: [
     TypeOrmModule.forFeature([UserEntity]),
@@ -25,11 +26,11 @@ import { BullModule } from '@nestjs/bull';
       signOptions: { expiresIn: '2h' },
     }),
     BullModule.registerQueue({
-      name: "MAIL_QUEUE",
-  }),
+      name: 'MAIL_QUEUE',
+    }),
   ],
   providers: [
-    AuthService, 
+    AuthService,
     MailService,
     AuthGoogleService,
     AuthTwitterService,
@@ -40,6 +41,6 @@ import { BullModule } from '@nestjs/bull';
     TwitterStrategy,
     KakaoStrategy,
   ],
-  controllers: [AuthController]
+  controllers: [AuthController],
 })
 export class AuthModule {}

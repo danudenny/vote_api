@@ -1,8 +1,14 @@
-import { MailerService } from "@nestjs-modules/mailer";
-import { OnQueueActive, OnQueueCompleted, OnQueueFailed, Process, Processor } from "@nestjs/bull";
-import { Injectable, Logger } from "@nestjs/common";
-import { Job } from "bull";
-import { LoaderEnv } from "src/config/loader";
+import { MailerService } from '@nestjs-modules/mailer';
+import {
+  OnQueueActive,
+  OnQueueCompleted,
+  OnQueueFailed,
+  Process,
+  Processor,
+} from '@nestjs/bull';
+import { Injectable, Logger } from '@nestjs/common';
+import { Job } from 'bull';
+import { LoaderEnv } from 'src/config/loader';
 
 @Injectable()
 @Processor('MAIL_QUEUE')
@@ -28,24 +34,30 @@ export class MailProcessor {
       error.stack,
     );
   }
-  
+
   @Process('CONFIRM_REGISTRATION')
-  public async confirmRegistration(job: Job<{ name: string, emailAddress: string; confirmUrl: string }>) {
-    this._logger.log(`Sending confirm registration email to '${job.data.emailAddress}'`);
+  public async confirmRegistration(
+    job: Job<{ name: string; emailAddress: string; confirmUrl: string }>,
+  ) {
+    this._logger.log(
+      `Sending confirm registration email to '${job.data.emailAddress}'`,
+    );
 
     try {
       return this._mailerService.sendMail({
         to: job.data.emailAddress,
         from: LoaderEnv.envs.MAIL_FROM,
         template: './email-confirmation',
-        subject: "Registration",
-        context: { 
+        subject: 'Registration',
+        context: {
           name: job.data.name,
-          confirmUrl: job.data.confirmUrl
+          confirmUrl: job.data.confirmUrl,
         },
       });
     } catch {
-      this._logger.error(`Failed to send confirmation email to '${job.data.emailAddress}'`);
+      this._logger.error(
+        `Failed to send confirmation email to '${job.data.emailAddress}'`,
+      );
     }
   }
 }

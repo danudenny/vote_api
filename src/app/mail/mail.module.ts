@@ -6,13 +6,13 @@ import { MailProcessor } from 'src/app/mail/mail.processor';
 import { MailService } from './mail.service';
 
 @Module({
-    imports: [
-        MailerModule.forRoot(LoaderEnv.mailCred()),
-        BullModule.registerQueue({
-            name: "MAIL_QUEUE",
-        })
-    ],
-    providers: [MailService, MailProcessor],
-    exports: [MailService]
+  imports: [
+    MailerModule.forRoot(LoaderEnv.mailCred()),
+    BullModule.registerQueue({
+      name: 'MAIL_QUEUE',
+    }),
+  ],
+  providers: [MailService, MailProcessor],
+  exports: [MailService],
 })
 export class MailModule {}

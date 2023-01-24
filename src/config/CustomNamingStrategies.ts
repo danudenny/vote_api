@@ -14,7 +14,8 @@ function maxstr(str: string, max: number = 60) {
 // ref: https://github.com/typeorm/typeorm/blob/master/src/naming-strategy/DefaultNamingStrategy.ts
 export class CustomNamingStrategy
   extends DefaultNamingStrategy
-  implements NamingStrategyInterface {
+  implements NamingStrategyInterface
+{
   columnName(
     propertyName: string,
     customName: string,

@@ -4,7 +4,6 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { LoggerModule } from 'nestjs-pino';
 import { UserModule } from './app/user/user.module';
 import { AuthModule } from './app/auth/auth.module';
-import { MailerModule } from '@nestjs-modules/mailer';
 import { MailModule } from './app/mail/mail.module';
 import { BullModule } from '@nestjs/bull';
 
@@ -26,8 +25,9 @@ import { BullModule } from '@nestjs/bull';
       }),
     }),
     AuthModule,
+
     UserModule,
     MailModule,
-  ]
+  ],
 })
 export class AppModule {}

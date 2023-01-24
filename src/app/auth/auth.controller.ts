@@ -6,7 +6,7 @@ import {
   UseInterceptors,
   Body,
   UseGuards,
-  Header
+  Header,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import {
@@ -35,7 +35,7 @@ export class AuthController {
     private authSvc: AuthService,
     private twitterSvc: AuthTwitterService,
     private googleSvc: AuthGoogleService,
-    private kakaoSvc: AuthKakaoService
+    private kakaoSvc: AuthKakaoService,
   ) {}
 
   @Post('register')
@@ -68,8 +68,8 @@ export class AuthController {
 
   @Get('google/redirect')
   @UseGuards(GoogleGuard)
-  googleAuthRedirect(@Request() req) {    
-    return this.googleSvc.googleLogin(req)
+  googleAuthRedirect(@Request() req) {
+    return this.googleSvc.googleLogin(req);
   }
 
   @Get('twitter')
@@ -79,8 +79,8 @@ export class AuthController {
   @Get('twitter/redirect')
   @Header('Authorization', `Bearer ${LoaderEnv.envs.TWITTER_BEARER_TOKEN}`)
   @UseGuards(TwitterGuard)
-  twitterAuthRedirect(@Request() req) {        
-    return this.twitterSvc.twitterLogin(req)
+  twitterAuthRedirect(@Request() req) {
+    return this.twitterSvc.twitterLogin(req);
   }
 
   @Get('kakao')
@@ -89,7 +89,7 @@ export class AuthController {
 
   @Get('kakao/redirect')
   @UseGuards(KakaoGuard)
-  kakaoAuthRedirect(@Request() req) {        
-    return this.kakaoSvc.kakaoLogin(req)
+  kakaoAuthRedirect(@Request() req) {
+    return this.kakaoSvc.kakaoLogin(req);
   }
 }

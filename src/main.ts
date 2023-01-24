@@ -42,4 +42,5 @@ async function bootstrap() {
   await app.listen(LoaderEnv.envs.APP_PORT);
   logger.info(`Listen APP on PORT :: ${LoaderEnv.envs.APP_PORT}`);
 }
+
 bootstrap();

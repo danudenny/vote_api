@@ -50,9 +50,9 @@ export class LoaderEnv {
     return {
       redis: {
         host: envs.REDIS_BULL_HOST,
-        port:  envs.REDIS_BULL_PORT,
-      }
-    }
+        port: envs.REDIS_BULL_PORT,
+      },
+    };
   }
 
   public static googleStrategy() {
@@ -60,8 +60,8 @@ export class LoaderEnv {
       clientID: envs.GOOGLE_CLIENT_ID,
       clientSecret: envs.GOOGLE_SECRET_ID,
       callbackURL: `${envs.APP_URL}/auth${envs.GOOGLE_CALLBACK_URL}`,
-      scope: ['email', 'profile']
-    }
+      scope: ['email', 'profile'],
+    };
   }
 
   public static twitterStrategy() {
@@ -70,8 +70,8 @@ export class LoaderEnv {
       clientID: envs.TWITTER_CLIENT_ID,
       clientSecret: envs.TWITTER_CLIENT_SECRETT,
       callbackURL: envs.TWITTER_CALLBACK_URL,
-      scope: ['tweet.read', 'users.read', 'offline.access']
-    }
+      scope: ['tweet.read', 'users.read', 'offline.access'],
+    };
   }
 
   public static kakaoStrategy() {
@@ -79,8 +79,8 @@ export class LoaderEnv {
       clientID: envs.KAKAO_CLIENT_ID,
       clientSecret: envs.KAKAO_SECRET_ID,
       callbackURL: `${envs.APP_URL}/auth${envs.KAKAO_CALLBACK_URL}`,
-      scope: ['profile_nickname', 'profile_image', 'account_email']
-    }
+      scope: ['profile_nickname', 'profile_image', 'account_email'],
+    };
   }
 
   public static jwtStrategy() {
@@ -88,10 +88,10 @@ export class LoaderEnv {
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       ignoreExpiration: false,
       secretOrKey: envs.JWT_SECRET,
-    }
+    };
   }
 
-  public static mailCred() {    
+  public static mailCred() {
     return {
       transport: {
         host: envs.MAIL_HOST,
@@ -112,7 +112,7 @@ export class LoaderEnv {
           strict: true,
         },
       },
-    }
+    };
   }
 
   public static getTypeOrmConfig(useReplication = false): TypeOrmModuleOptions {
